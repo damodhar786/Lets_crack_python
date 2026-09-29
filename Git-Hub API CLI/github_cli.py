@@ -6,7 +6,7 @@ def api_response():
 
     response = requests.get(url)
 
-    print(response.headers)
+    # print(response.headers)
 
     if response.status_code == 200:
         data = response.json()
@@ -25,6 +25,8 @@ def event_created():
     # print(event['type'])
     for event in events:
 
+        repository_name = event['repo']['name'].split("/")    
+
         created_at = event['created_at']
         date_created = datetime.fromisoformat(created_at) # Date when user used github for certain tasks/events
 
@@ -33,11 +35,12 @@ def event_created():
         
             ref = event["payload"]["ref"].split("/") # Split refs/heads/main to get Main Branch
 
-            print(f"{event['actor']['login']} Pushed Code to {event['repo']['name']} repository to {ref[2]} branch on {date_created.date()}")
+            print(f"{event['actor']['login']} Pushed Code to {repository_name[1]} repository in {ref[2]} branch on {date_created.date()}")
 
         if event['type'] == "CreateEvent":
-            repository_name = event['repo']['name'].split("/")           
+            
+            print(f"{event['actor']['login']} Created a {event['payload']['ref_type']} in {repository_name[1]} Repository on {date_created.date()}")
 
-            print(f"{event['actor']['login']} Created {repository_name[1]} Repository with {event['payload']['ref']} branch on {date_created.date()}")
+        # if event['type'] == 'IssuesEvent': # No issues event
 
 event_created()
