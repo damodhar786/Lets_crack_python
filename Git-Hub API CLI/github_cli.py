@@ -1,5 +1,13 @@
-import requests
+import requests, sys
 from datetime import datetime
+
+
+def get_username():
+    if len(sys.argv) == 2:
+        userName = sys.argv[1]
+        event_created(userName)
+    else:
+        print("Please follow: python github_activity.py <username>")
 
 def api_response(userName):
     url = (f"https://api.github.com/users/{userName}/events")
@@ -53,6 +61,5 @@ def event_created(userName):
     else:
         print(f"API Failed")
 
-userName = input("Type your GitHub User Name: ")
 
-event_created(userName)
+get_username()
