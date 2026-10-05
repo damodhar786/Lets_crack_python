@@ -68,3 +68,8 @@ def process_events(userName):
 
 
 userName = get_username()
+if userName:
+    process_events(userName)
+else:
+    print(f"Invalid arguments. Usage: python github_activity.py {userName}")
+
