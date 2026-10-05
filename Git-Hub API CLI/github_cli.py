@@ -5,11 +5,12 @@ from datetime import datetime
 def get_username():
     if len(sys.argv) == 2:
         userName = sys.argv[1]
-        event_created(userName)
+        return userName
     else:
         print("Please follow: python github_activity.py <username>")
 
 def api_response(userName):
+    
     url = (f"https://api.github.com/users/{userName}/events")
 
     response = requests.get(url)
@@ -31,30 +32,34 @@ def api_response(userName):
 
 
 
-def event_created(userName):
+def process_events(userName):
     events, status_code = api_response(userName)
 
     if status_code == 200:
-        # print(event['type'])
-        for event in events:
 
-            repository_name = event['repo']['name'].split("/")    
+        if events:
+            # print(event['type'])
+            for event in events:
 
-            created_at = event['created_at']
-            date_created = datetime.fromisoformat(created_at) # Date when user used github for certain tasks/events
+                repository_name = event['repo']['name'].split("/")    
+                        
+                created_at = event['created_at']
+                date_created = datetime.fromisoformat(created_at) # Date when user used github for certain tasks/events
+                        
+                if event['type'] == "PushEvent":
+                    # print(event["payload"])
+                                    
+                    ref = event["payload"]["ref"].split("/") # Split refs/heads/main to get Main Branch
+                        
+                    print(f"{event['actor']['login']} Pushed Code to {repository_name[1]} repository in {ref[2]} branch on {date_created.date()}")
+                        
+                elif event['type'] == "CreateEvent":
+                    print(f"{event['actor']['login']} Created a {event['payload']['ref_type']} in {repository_name[1]} Repository on {date_created.date()}")
+                        
+                # if event['type'] == 'IssuesEvent': # No issues event
+        else:
+            print("No recent activity...")
 
-            if event['type'] == "PushEvent":
-                # print(event["payload"])
-            
-                ref = event["payload"]["ref"].split("/") # Split refs/heads/main to get Main Branch
-
-                print(f"{event['actor']['login']} Pushed Code to {repository_name[1]} repository in {ref[2]} branch on {date_created.date()}")
-
-            if event['type'] == "CreateEvent":
-                
-                print(f"{event['actor']['login']} Created a {event['payload']['ref_type']} in {repository_name[1]} Repository on {date_created.date()}")
-
-            # if event['type'] == 'IssuesEvent': # No issues event
     elif status_code == 404:
         print(f"Username {userName} does not exist as a GitHub user")
 
@@ -62,4 +67,4 @@ def event_created(userName):
         print(f"API Failed")
 
 
-get_username()
+userName = get_username()
