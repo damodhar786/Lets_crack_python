@@ -42,7 +42,7 @@ def rand_num_generator():
 #     return
 
 def guessing_logic(chances, random_number):
-
+   
     while chances:
         user_number = int(input("Enter your guess: "))
 
@@ -51,11 +51,14 @@ def guessing_logic(chances, random_number):
         else:
             print("Incorrect! Guessed number is Wrong")
 
+        chances -= 1
+
     return
 
 
 chances = welcome_message()
 random_number = rand_num_generator()
+guessing_logic(chances, random_number)
 
 # print(chances)
 # print(random_number)
