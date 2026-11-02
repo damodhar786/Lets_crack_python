@@ -44,25 +44,32 @@ def rand_num_generator():
 def guessing_logic(chances, random_number):
 
     count = 0
-   
+
+    
     while chances:
         user_number = int(input("Enter your guess: "))
         count += 1
-        if user_number == random_number:
-            print(f"Congratulations! You Guessed the Correct Number in {count} attempts.")
-            break            
+
+        if 1 <= user_number <= 100:
+            if user_number == random_number:
+                print(f"Congratulations! You Guessed the Correct Number in {count} attempts.")
+                break            
+
+            else:
+                if random_number < user_number:
+                    print(f"Incorrect! The Secret number is Lower than {user_number}")
+
+                elif random_number > user_number:
+                    print(f"Incorrect! The Secret number is Greater than {user_number}")
+
+            chances -= 1
+            if chances == 0:
+                print(f"Sorry! Your Chances to Guess Completed -- Try Again")
+                print(f"The Secret Number is {random_number}")
 
         else:
-            if random_number < user_number:
-                print(f"Incorrect! The Secret number is Lower than {user_number}")
-
-            elif random_number > user_number:
-                print(f"Incorrect! The Secret number is Greater than {user_number}")
-
-        chances -= 1
-        if chances == 0:
-            print(f"Sorry! Your Chances to Guess Completed -- Try Again")
-            print(f"The Secret Number is {random_number}")
+            print("Please Enter a Number between 0 and 100")
+            continue
 
 
 
